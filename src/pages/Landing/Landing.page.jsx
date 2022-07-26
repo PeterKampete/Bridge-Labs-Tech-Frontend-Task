@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckSquare } from "react-icons/fa";
 import jwt_decode from "jwt-decode";
 import {
   Container,
@@ -11,35 +11,47 @@ import {
   Label,
   Input,
   InputContainer,
-  Remember
+  Remember,
+  AuthContainer,
+  LoginButton,
+  RegisterButton,
+  GoogleButton,
+  UAuth,
+  SignText,
 } from "./Landing.styles";
 
 const Landing = () => {
-  //   const [user, setUser] = useState({});
+  const [user, setUser] = useState({});
+  const [active, setActive] = useState(false);
 
-  //   const handleCallbackResponse = (response) => {
-  //     console.log("Encoded JWT ID token" + response.credential);
-  //     const userObj = jwt_decode(response.credential);
-  //     setUser(userObj);
-  //     document.getElementById("signInDiv").hidden = true;
-  //   };
-  //   const handleSignOut = () => {
-  //     setUser({});
-  //     document.getElementById("signInDiv").hidden = false;
-  //   };
+  const handleRememberMe = () => {
+    setActive(!active);
+    console.log("Remember me");
+  };
 
-  //   useEffect(() => {
-  //     google.accounts.id.initialize({
-  //       client_id:
-  //         "676539751021-avahe2d71i14fpmj13jrnr13t3u9rca8.apps.googleusercontent.com",
-  //       callback: handleCallbackResponse,
-  //     });
-  //     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-  //       theme: "outline",
-  //       size: "large",
-  //     });
-  //     google.accounts.id.prompt();
-  //   }, []);
+  const handleCallbackResponse = (response) => {
+    console.log("Encoded JWT ID token" + response.credential);
+    const userObj = jwt_decode(response.credential);
+    setUser(userObj);
+    document.getElementById("signInDiv").hidden = true;
+  };
+  const handleSignOut = () => {
+    setUser({});
+    document.getElementById("signInDiv").hidden = false;
+  };
+
+  useEffect(() => {
+    google.accounts.id.initialize({
+      client_id:
+        "676539751021-avahe2d71i14fpmj13jrnr13t3u9rca8.apps.googleusercontent.com",
+      callback: handleCallbackResponse,
+    });
+    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
+      theme: "outline",
+      size: "large",
+    });
+    google.accounts.id.prompt();
+  }, []);
   return (
     <Container>
       <LeftSection>
@@ -51,29 +63,25 @@ const Landing = () => {
         <InputContainer>
           <Input type="text" />
         </InputContainer>
-        <Remember>
-          <FaCheckCircle style={{ color: 'var(--color-primary)' }} />
+        <Remember active={active} onClick={handleRememberMe}>
+          <FaCheckSquare
+            style={{ color: active ? "var(--color-primary)" : "#787878" }}
+          />
           <span>Remember Me</span>
         </Remember>
-
-        {/* <div id="signInDiv"></div>
-        {Object.keys(user).length !== 0 && (
-          <button onClick={(e) => handleSignOut(e)}>Sign Out</button>
-        )}
-        {user && (
-          <div>
-            <img
-              alt="nothing"
-              src={user?.picture}
-              style={{
-                border: "1px solid red",
-                width: "100px",
-                height: "100px",
-              }}
-            />
-            <h3>{user.name}</h3>
-          </div>
-        )} */}
+        \
+        <div style={{ marginTop: "70px", width: "92%" }}>
+          <SignText>Sign In With Google</SignText>
+          <AuthContainer>
+            <UAuth>
+              <LoginButton>Login</LoginButton>
+              <RegisterButton>Register</RegisterButton>
+            </UAuth>
+            <GoogleButton>
+              <div id="signInDiv"></div>
+            </GoogleButton>
+          </AuthContainer>
+        </div>
       </LeftSection>
       <RightSection>hey</RightSection>
     </Container>

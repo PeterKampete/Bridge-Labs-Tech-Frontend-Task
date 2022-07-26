@@ -1,8 +1,8 @@
 :root {
     /*theme colors*/
     --color-primary: #3751FE;
-    --color-secondary: #787878;
-    --color-secondary-shade-0: #dedada;
+    --color-secondary: #dedada;
+    --color-secondary-shade-0: #787878;
     --color-secondary-shade-1: #F4F4F4;
     --color-tertiary: #ffffff;
 }
