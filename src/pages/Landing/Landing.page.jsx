@@ -18,7 +18,15 @@ import {
   GoogleButton,
   UAuth,
   SignText,
+  NavContainer,
+  LinkContainer,
+  StyledLink,
+  ListItem,
+  Image,
 } from "./Landing.styles";
+import image from "../../assets/images/ai-landing.jpeg";
+
+const clientID = process.env.REACT_APP_CLIENT_ID;
 
 const Landing = () => {
   const [user, setUser] = useState({});
@@ -42,8 +50,7 @@ const Landing = () => {
 
   useEffect(() => {
     google.accounts.id.initialize({
-      client_id:
-        "676539751021-avahe2d71i14fpmj13jrnr13t3u9rca8.apps.googleusercontent.com",
+      client_id: clientID,
       callback: handleCallbackResponse,
     });
     google.accounts.id.renderButton(document.getElementById("signInDiv"), {
@@ -69,7 +76,6 @@ const Landing = () => {
           />
           <span>Remember Me</span>
         </Remember>
-        \
         <div style={{ marginTop: "70px", width: "92%" }}>
           <SignText>Sign In With Google</SignText>
           <AuthContainer>
@@ -83,7 +89,25 @@ const Landing = () => {
           </AuthContainer>
         </div>
       </LeftSection>
-      <RightSection>hey</RightSection>
+      <RightSection>
+        <NavContainer>
+          <LinkContainer>
+            <ListItem>
+              <StyledLink>Home</StyledLink>
+            </ListItem>
+            <ListItem>
+              <StyledLink>About us</StyledLink>
+            </ListItem>
+            <ListItem>
+              <StyledLink>Blog</StyledLink>
+            </ListItem>
+            <ListItem>
+              <StyledLink>Pricing</StyledLink>
+            </ListItem>
+          </LinkContainer>
+        </NavContainer>
+        <Image src={image} alt="nothing" />
+      </RightSection>
     </Container>
   );
 };

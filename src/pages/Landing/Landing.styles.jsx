@@ -13,12 +13,12 @@ export const LeftSection = styled.div`
 `;
 export const Title = styled.h1`
   color: var(--color-primary);
-  font-size: 38px;
+  font-size: 36px;
   margin-bottom: 70px;
 `;
 export const StyledTitle = styled(Title)`
   color: var(--color-primary);
-  font-size: 40px;
+  font-size: 38px;
   margin: 0px;
 `;
 export const Label = styled.p`
@@ -52,8 +52,7 @@ export const Remember = styled.button`
   color: var(--color-secondary-shade-0);
   & > span {
     margin-left: 10px;
-    color: ${({ active }) =>
-      active ? "var(--color-primary)" : "#787878"};
+    color: ${({ active }) => (active ? "var(--color-primary)" : "#787878")};
   }
   :hover {
     cursor: pointer;
@@ -75,7 +74,7 @@ export const UAuth = styled.div`
 export const LoginButton = styled.button`
   color: var(--color-tertiary);
   background-color: var(--color-primary);
-  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.4);
   padding: 12px;
   width: 45%;
   border: none;
@@ -114,5 +113,45 @@ export const SignText = styled.p`
 
 export const RightSection = styled.div`
   background-color: var(--color-secondary-shade-1);
+  padding: 48px 0px 20px 60px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+export const NavContainer = styled.div`
+  width: 60%;
+  font-size: 22px;
+`;
+export const LinkContainer = styled.ul`
+  width: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;
+export const ListItem = styled.li`
+  width: 100%;
+  list-style-type: none;
+  padding: 10px 0px;
+`;
+export const StyledLink = styled.a`
+  color: var(--color-secondary-shade-0);
+  text-decoration: none;
+  cursor: pointer;
+  :active {
+    border-bottom: 2px solid var(--color-primary);
+  }
+  :hover {
+    border-bottom: 3px solid rgba(55, 81, 254, 0.8);
+    transition: 0.1s ease-in;
+  }
+`;
+
+export const Image = styled.img`
+  width: 50%;
+  height: auto;
+  margin: 60px 15px 0px 0px;
 `;
