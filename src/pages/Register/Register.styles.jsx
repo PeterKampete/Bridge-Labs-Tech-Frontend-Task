@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { InputText } from "../../components";
 
 export const Container = styled.div`
   display: grid;
@@ -20,6 +21,11 @@ export const StyledTitle = styled(Title)`
   color: var(--color-primary);
   font-size: 38px;
   margin: 0px;
+`;
+export const RegisterTitle = styled(Title)`
+  color: var(--color-primary);
+  font-size: 36px;
+  margin-bottom: 30px;
 `;
 export const Label = styled.p`
   color: var(--color-secondary-shade-0);
@@ -92,7 +98,7 @@ export const GoogleButton = styled.div`
 export const SignText = styled.p`
   text-align: right;
   margin-bottom: 2px;
-  margin-right: 2px;
+  margin-right: 3px;
   font-size: 12px;
 `;
 
@@ -103,6 +109,7 @@ export const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  filter: blur(4px);
 `;
 export const NavContainer = styled.div`
   width: 60%;
@@ -122,4 +129,7 @@ export const Image = styled.img`
   width: 50%;
   height: auto;
   margin: 60px 15px 0px 0px;
+`;
+export const StyledInputText = styled(InputText)`
+  margin-top: 18px;
 `;

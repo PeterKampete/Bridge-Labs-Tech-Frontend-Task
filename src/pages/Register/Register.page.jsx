@@ -1,18 +1,14 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaCheckSquare } from "react-icons/fa";
 import {
   Container,
   LeftSection,
   RightSection,
-  Title,
-  StyledTitle,
-  Label,
-  Input,
-  InputContainer,
+  RegisterTitle,
   Remember,
   AuthContainer,
   LoginButton,
@@ -22,10 +18,9 @@ import {
   SignText,
   NavContainer,
   LinkContainer,
-  StyledLink,
-  ListItem,
   Image,
-} from "./Landing.styles";
+  StyledInputText,
+} from "./Register.styles";
 import image from "../../assets/images/ai-landing.jpeg";
 import InputText from "../../components/Input/InputText.component";
 import NavItem from "../../components/NavItem/NavItem.component";
@@ -35,43 +30,47 @@ const clientID = process.env.REACT_APP_CLIENT_ID;
 //   baseUrl: "https://simplor.herokuapp.com/api",
 // });
 
-const Landing = () => {
+const Register = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [active, setActive] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   const handleRememberMe = () => {
     setActive(!active);
     console.log("Remember me");
   };
 
-  const handleLogin = async (e) => {
+  const userData = {
+    email,
+    first_name: firstName,
+    last_name: lastName,
+    phone,
+    password,
+  };
+
+  const handleRegister = async (e) => {
     e.preventDefault();
-    await axios
-      .post(
-        "https://simplor.herokuapp.com/api/user/login",
-        {
-          email: email,
-          password: password,
-        },
+    console.log("userDate", userData);
+    try {
+      const response = await axios.post(
+        "https://simplor.herokuapp.com/api/user/register",
+        userData,
         {
           headers: {
-            "Content-Type": "application/json",
+            Accept: "application/json",
           },
         }
-      )
-      .then((response) => {
-        console.log(response.data);
-        if (response.status === 200) {
-          localStorage.setItem("userToken", response.access);
-          navigate("/home");
-        }
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleCallbackResponse = (response) => {
@@ -79,7 +78,6 @@ const Landing = () => {
     const userObj = jwt_decode(response.credential);
     setUser(userObj);
     document.getElementById("signInDiv").hidden = true;
-    navigate('/home');
   };
   const handleSignOut = () => {
     setUser({});
@@ -100,23 +98,37 @@ const Landing = () => {
   return (
     <Container>
       <LeftSection>
-        <Title> Digital</Title>
-        <StyledTitle>
-          Artificial Intelligence Driving Results For The Travel Industry
-        </StyledTitle>
-        <Label>Welcome back! Please login to your account.</Label>
+        <RegisterTitle> Register Account</RegisterTitle>
         <div>
-          <InputText
-            type="text"
+          <StyledInputText
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="firstName"
+          />
+          <StyledInputText
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="lastName"
+          />
+          <StyledInputText
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="phone"
+          />
+          <StyledInputText
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
           />
-          <InputText
-            type="text"
+          <StyledInputText
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+          />
+          <StyledInputText
+            type="file"
+            value={avatar}
+            onChange={(e) => setAvatar(e.target.value)}
           />
         </div>
         <Remember active={active} onClick={handleRememberMe}>
@@ -125,12 +137,12 @@ const Landing = () => {
           />
           <span>Remember Me</span>
         </Remember>
-        <div style={{ marginTop: "70px", width: "92%" }}>
+        <div style={{ marginTop: "40px", width: "92%" }}>
           <SignText>Sign In With Google</SignText>
           <AuthContainer>
             <UAuth>
-              <LoginButton onClick={handleLogin}>Login</LoginButton>
-              <RegisterButton onClick={() => navigate("/register")}>
+              <LoginButton onClick={() => navigate("/")}>Login</LoginButton>
+              <RegisterButton type="submit" onClick={handleRegister}>
                 Register
               </RegisterButton>
             </UAuth>
@@ -155,4 +167,4 @@ const Landing = () => {
   );
 };
 
-export default Landing;
+export default Register;
