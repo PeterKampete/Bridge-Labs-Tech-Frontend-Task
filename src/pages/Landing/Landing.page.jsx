@@ -1,9 +1,10 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
-import { FaCheckSquare } from "react-icons/fa";
+import validator from "validator";
+import { FaCheckSquare, FaEye, FaEyeSlash } from "react-icons/fa";
 import {
   Container,
   LeftSection,
@@ -11,8 +12,6 @@ import {
   Title,
   StyledTitle,
   Label,
-  Input,
-  InputContainer,
   Remember,
   AuthContainer,
   LoginButton,
@@ -22,13 +21,12 @@ import {
   SignText,
   NavContainer,
   LinkContainer,
-  StyledLink,
-  ListItem,
   Image,
 } from "./Landing.styles";
 import image from "../../assets/images/ai-landing.jpeg";
 import InputText from "../../components/Input/InputText.component";
 import NavItem from "../../components/NavItem/NavItem.component";
+import { useAuth } from "../../hooks/useAuth";
 
 const clientID = process.env.REACT_APP_CLIENT_ID;
 // const client = axios.create({
@@ -36,42 +34,67 @@ const clientID = process.env.REACT_APP_CLIENT_ID;
 // });
 
 const Landing = () => {
-  const navigate = useNavigate();
+  const navigation = useNavigate();
   const [user, setUser] = useState({});
+  const { loginUser } = useAuth();
   const [active, setActive] = useState(false);
+  const [navigate, setNavigate] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [checkType, setCheckType] = useState(false);
 
   const handleRememberMe = () => {
     setActive(!active);
     console.log("Remember me");
   };
 
+  const clearInputs = () => {
+    setEmail("");
+    setPassword("");
+  };
+
+  const userData = {
+    email,
+    password,
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    await axios
-      .post(
-        "https://simplor.herokuapp.com/api/user/login",
-        {
-          email: email,
-          password: password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        if (response.status === 200) {
-          localStorage.setItem("userToken", response.access);
-          navigate("/home");
-        }
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    if (!validator.isEmail(email) || validator.isEmpty(email)) {
+      setEmailError("Please enter a valid email address");
+    }
+    if (!validator.isStrongPassword(password) || validator.isEmpty(password)) {
+      setPasswordError(
+        "Invalid Password: minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1"
+      );
+    }
+    if (
+      (validator.isEmail(email) || !validator.isEmpty(email)) &&
+      (validator.isStrongPassword(password) || !validator.isEmpty(password))
+    ) {
+      loginUser(userData)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log("response", response);
+            clearInputs();
+            setError(false);
+            setNavigate(true);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          if (emailError) {
+            setError("");
+          } else {
+            setError(error.data.detail);
+            return;
+          }
+        });
+    }
   };
 
   const handleCallbackResponse = (response) => {
@@ -79,7 +102,7 @@ const Landing = () => {
     const userObj = jwt_decode(response.credential);
     setUser(userObj);
     document.getElementById("signInDiv").hidden = true;
-    navigate('/home');
+    navigate("/home");
   };
   const handleSignOut = () => {
     setUser({});
@@ -97,6 +120,10 @@ const Landing = () => {
     });
     google.accounts.id.prompt();
   }, []);
+
+  if (navigate) {
+    return <Navigate to="/home" />;
+  }
   return (
     <Container>
       <LeftSection>
@@ -106,6 +133,7 @@ const Landing = () => {
         </StyledTitle>
         <Label>Welcome back! Please login to your account.</Label>
         <div>
+          <span style={{ color: "red", fontSize: "10px" }}>{error}</span>
           <InputText
             type="text"
             value={email}
@@ -113,24 +141,50 @@ const Landing = () => {
             placeholder="Email"
           />
           <InputText
-            type="text"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-          />
+            type={checkType ? "text" : "password"}
+          >
+            {checkType ? (
+              <FaEye
+                onClick={() => setCheckType(!checkType)}
+                style={{
+                  position: "absolute",
+                  right: "60%",
+                  color: "var(--color-primary)",
+                  fontSize: "20px",
+                }}
+              />
+            ) : (
+              <FaEyeSlash
+                onClick={() => setCheckType(!checkType)}
+                style={{
+                  position: "absolute",
+                  right: "60%",
+                  color: "var(--color-primary)",
+                  fontSize: "20px",
+                }}
+              />
+            )}
+          </InputText>
+          <span style={{ color: "red", fontSize: "10px" }}>
+            {passwordError}
+          </span>
         </div>
+
         <Remember active={active} onClick={handleRememberMe}>
           <FaCheckSquare
             style={{ color: active ? "var(--color-primary)" : "#787878" }}
           />
           <span>Remember Me</span>
         </Remember>
-        <div style={{ marginTop: "70px", width: "92%" }}>
+        <div style={{ marginTop: "40px", width: "92%" }}>
           <SignText>Sign In With Google</SignText>
           <AuthContainer>
             <UAuth>
               <LoginButton onClick={handleLogin}>Login</LoginButton>
-              <RegisterButton onClick={() => navigate("/register")}>
+              <RegisterButton onClick={() => navigation("/register")}>
                 Register
               </RegisterButton>
             </UAuth>

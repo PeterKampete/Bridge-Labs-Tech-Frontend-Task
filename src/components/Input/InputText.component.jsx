@@ -2,7 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 import { InputContainer, Input } from "./InputText.styles";
 
-const InputText = ({ value, placeholder, onChange, type, ...props }) => {
+const InputText = ({
+  value,
+  placeholder,
+  onChange,
+  type,
+  children,
+  ...props
+}) => {
   return (
     <InputContainer {...props}>
       <Input
@@ -11,6 +18,7 @@ const InputText = ({ value, placeholder, onChange, type, ...props }) => {
         onChange={onChange}
         placeholder={placeholder}
       />
+      {children}
     </InputContainer>
   );
 };

@@ -23,7 +23,7 @@ export const StyledTitle = styled(Title)`
 `;
 export const Label = styled.p`
   color: var(--color-secondary-shade-0);
-  margin-bottom: 80px
+  margin-bottom: 60px
 `;
 
 export const Remember = styled.button`

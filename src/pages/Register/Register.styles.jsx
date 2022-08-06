@@ -29,7 +29,7 @@ export const RegisterTitle = styled(Title)`
 `;
 export const Label = styled.p`
   color: var(--color-secondary-shade-0);
-  margin-bottom: 80px
+  margin-bottom: 80px;
 `;
 
 export const Remember = styled.button`
@@ -109,7 +109,6 @@ export const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  filter: blur(4px);
 `;
 export const NavContainer = styled.div`
   width: 60%;
@@ -132,4 +131,27 @@ export const Image = styled.img`
 `;
 export const StyledInputText = styled(InputText)`
   margin-top: 18px;
+`;
+export const UploadButton = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 35px;
+  width: 35px;
+  padding: 1px;
+  overflow: hidden;
+  border: 3px solid blue;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  :hover {
+    box-shadow: 0 0 5px 1px rgba(0, 0, 255, 0.5);
+    border: 3px solid rgba(0, 0, 255, 0.6);
+  }
+  & > img {
+    border-radius: 50%;
+    border: none;
+    object-fit: cover;
+    object-position: top;
+  }
 `;
